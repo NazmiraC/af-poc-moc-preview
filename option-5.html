@@ -1,0 +1,185 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AF Gallery — Option 5: Animated showcase</title><link rel="stylesheet" href="styles.css?v=20261026-option5-collapse-no-flash"></head><body><div class="app option1-app option5-app" id="app"></div><script src="app.js"></script><script>
+const app=document.querySelector('#app');
+const heroProject={
+  eyebrow:'',kicker:'',heading:'',
+  status:'Current',title:'AF Landscape',description:'A proof of concept for creating interactive 3D environments that allow people to explore projects spatially.',
+  logo:'assets/exforbes-logo.png',startColour:'#0e525a',middleColour:'#f15a25',gradient:'linear-gradient(110deg,#f15a25 0%,#dd7442 34%,#5a8c84 68%,#0e525a 100%)',
+  images:[
+    ['assets/hero-project-focus.png','AF Landscape environment'],['assets/hero-project-02.png','Global operations environment'],
+    ['assets/hero-project-03.png','Global operations sketch'],['assets/hero-project-04.png','Rocket construction environment'],
+    ['assets/hero-project-05.png','Rocket construction detail'],['assets/hero-project-01.png','Project system map'],
+    ['assets/hero-project-02.png','Global operations environment detail'],['assets/hero-project-03.png','Global operations sketch detail'],
+    ['assets/hero-project-04.png','Rocket construction environment detail'],['assets/hero-project-05.png','Rocket construction close-up']
+  ],featuredIndex:0
+};
+function renderHero(project){
+  const tiles=project.images.map(([src,alt],index)=>`<figure class="hero-tile tile-${index+1}${index===project.featuredIndex?' is-featured':''}"><img src="${src}" alt="${alt}"></figure>`).join('');
+  return `<section class="gallery-hero" aria-labelledby="gallery-hero-title" style="--hero-start:${project.startColour};--hero-middle:${project.middleColour};--hero-gradient:${project.gradient}">
+  <div class="hero-glow hero-glow-orange"></div><div class="hero-glow hero-glow-teal"></div>
+  <div class="hero-mosaic" aria-label="Featured project images">
+    ${tiles}
+  </div>
+  <div class="hero-project-info"><h2>${project.title}</h2><p>${project.description}</p><a href="landscape.html">View project</a></div>
+</section>`}
+const hero=renderHero(heroProject);
+const logoStrip=`<header class="brandbar"><a href="index.html" aria-label="Alexforbes home"><img src="assets/exforbes-logo.png" alt="Alexforbes"></a><div class="logo-tools"><label class="search"><input placeholder="Search projects, keywords, or tech stack" aria-label="Search projects"></label></div></header>`;
+const filterStrip=`<nav class="tabs" aria-label="Project filters"><a href="#">All projects</a><a class="active" href="#">Approved projects</a><a href="#">POC projects</a><a href="#">Adhoc projects</a><a href="#">Design projects</a><a href="#">Miscellaneous</a></nav>`;
+app.innerHTML=logoStrip+filterStrip+hero+`<main id="list"></main>`+footer();
+const figmaTracks={
+  orange:[[820,203,129,158,0],[864,326,129,158,0],[827,452,129,158,0],[728,529,129,158,180],[596,535,129,158,180],[489,463,129,158,180],[509,463,129,158,180],[539,463,129,158,180],[527,376,129,158,180],[542,328,186,208,180],[542,328,186,208,180],[519,236,321,360,180],[514,173,412,462,180],[0,0,1440,809,180]],
+  blue:[[596,535,129,158,180],[489,463,129,158,180],[446,342,129,158,180],[481,219,129,158,180],[578,137,129,158,0],[708,130,129,158,0],[708,150,129,158,0],[708,180,129,158,0],[722,218,129,158,0],[681,232,186,208,0],[681,232,186,208,0],[610,230,321,360,0]],
+  pink:[[708,130,129,158,0],[820,203,129,158,0],[864,326,129,158,0],[827,452,129,158,0],[728,529,129,158,180],[596,535,129,158,180],[596,515,129,158,180],[596,485,129,158,180],[581,434,129,158,180],[600,371,186,208,180],[600,371,186,208,180],[597,202,321,360,180]],
+  yellow:[[864,326,129,158,0],[827,452,129,158,0],[728,529,129,158,180],[596,535,129,158,180],[489,463,129,158,180],[446,342,129,158,180],[466,342,129,158,180],[496,342,129,158,180],[524,297,129,158,180],[559,282,186,208,180],[559,282,186,208,180],[597,215,321,360,180]],
+  green:[[827,452,129,158,0],[728,529,129,158,180],[596,535,129,158,180],[489,463,129,158,180],[446,342,129,158,180],[481,219,129,158,180],[501,219,129,158,180],[531,219,129,158,180],[567,225,129,158,180],[600,232,186,208,180],[600,232,186,208,180],[617,202,321,360,180]],
+  aqua:[[728,529,129,158,180],[596,535,129,158,180],[489,463,129,158,180],[446,342,129,158,180],[481,219,129,158,180],[578,137,129,158,0],[578,157,129,158,0],[578,187,129,158,0],[645,197,129,158,0],[636,216,186,208,0],[636,216,186,208,0],[617,215,321,360,0]],
+  darkblue:[[489,463,129,158,180],[446,342,129,158,180],[481,219,129,158,180],[578,137,129,158,0],[708,130,129,158,0],[820,203,129,158,0],[800,203,129,158,0],[770,203,129,158,0],[774,276,129,158,0],[717,282,186,208,0],[717,282,186,208,0],[610,248,321,360,0]],
+  purple:[[446,342,129,158,180],[481,219,129,158,180],[578,137,129,158,0],[708,130,129,158,0],[820,203,129,158,0],[864,326,129,158,0],[844,326,129,158,0],[814,326,129,158,0],[786,355,129,158,0],[717,325,186,208,0],[717,325,186,208,0],[610,248,321,360,0]],
+  lightpink:[[481,219,129,158,180],[578,137,129,158,0],[708,130,129,158,0],[820,203,129,158,0],[864,326,129,158,0],[827,452,129,158,0],[807,452,129,158,0],[777,452,129,158,0],[734,434,129,158,0],[682,371,186,208,0],[682,371,186,208,0],[597,248,321,360,0]],
+  white:[[578,137,129,158,0],[708,130,129,158,0],[820,203,129,158,0],[864,326,129,158,0],[827,452,129,158,0],[728,529,129,158,180],[728,509,129,158,180],[728,479,129,158,180],[664,455,129,158,180],[652,386,186,208,180],[652,386,186,208,180],[610,230,321,360,180]]
+};
+function runHeroChoreography(){
+  const tiles=[...document.querySelectorAll('.hero-tile')];
+  const names=['orange','blue','pink','yellow','green','aqua','darkblue','purple','lightpink','white'];
+  const duration=6000,samples=72,cx=720,cy=404.5;
+  const clamp=n=>Math.max(0,Math.min(1,n));
+  const smooth=n=>{n=clamp(n);return n*n*n*(n*(n*6-15)+10)};
+  const mix=(a,b,t)=>a+(b-a)*t;
+  const catmull=(a,b,c,d,t)=>.5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);
+  const orbitPoint=(points,progress,index)=>{
+    const anchors=points.slice(0,6).map((p,i)=>{
+      const pull=.84;
+      const x=cx+((p[0]+64.5)-cx)*pull-64.5;
+      const y=cy+((p[1]+79)-cy)*pull-79;
+      return [x+(index%2?5:-4),y+((index%3)-1)*4];
+    });
+    const u=(progress*1.08*anchors.length)%anchors.length,i=Math.floor(u),t=u-i,n=anchors.length;
+    const p0=anchors[(i-1+n)%n],p1=anchors[i%n],p2=anchors[(i+1)%n],p3=anchors[(i+2)%n];
+    return [catmull(p0[0],p1[0],p2[0],p3[0],t),catmull(p0[1],p1[1],p2[1],p3[1],t)];
+  };
+  const introAnimations=tiles.map((tile,index)=>{
+    const name=names[index],points=figmaTracks[name],z=index===0?30:index+1;
+    const frames=Array.from({length:samples+1},(_,step)=>{
+      const t=step/samples,orbit=orbitPoint(points,t,index);
+      const stagger=index===0?0:(index%5)*.007;
+      const recede=index===0?0:smooth((t-(.65+stagger))/(.27-stagger));
+      let w=129,h=158,x=orbit[0],y=orbit[1];
+      if(index===0){
+        const focus=smooth((t-.64)/.36);
+        w=mix(129,1440,focus);h=mix(158,808,focus);x=mix(orbit[0],0,focus);y=mix(orbit[1],.5,focus);
+      }else{
+        const smaller=mix(1,.78,recede),baseW=w,baseH=h;
+        w=baseW*smaller;h=baseH*smaller;x+=(baseW-w)/2;y+=(baseH-h)/2;
+      }
+      return{offset:t,left:`${x/14.4}%`,top:`${y/8.09}%`,width:`${w/14.4}%`,height:`${h/8.09}%`,transform:'none',zIndex:String(z),opacity:index===0?1:mix(1,0,recede)};
+    });
+    return tile.animate(frames,{duration,iterations:1,fill:'forwards'});
+  });
+
+  const uniqueProjects=[
+    {src:'assets/hero-project-focus.png',title:'AF Landscape',description:'An interactive 3D environment for exploring projects spatially.'},
+    {src:'assets/hero-project-02.png',title:'Lorem ipsum',description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+    {src:'assets/hero-project-03.png',title:'Lorem ipsum',description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+    {src:'assets/hero-project-04.png',title:'Lorem ipsum',description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+    {src:'assets/hero-project-05.png',title:'Lorem ipsum',description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
+  ];
+  let featured=0,isAdvancing=false;
+  const advanceFeatured=async()=>{
+    if(isAdvancing)return;
+    isAdvancing=true;
+    const hero=document.querySelector('.gallery-hero'),info=document.querySelector('.hero-project-info');
+    featured=(featured+1)%uniqueProjects.length;
+    const lead=tiles[0],image=lead.querySelector('img');
+    await lead.animate([{opacity:1},{opacity:0}],{duration:420,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'}).finished;
+    const current=uniqueProjects[featured];
+    if(info){info.querySelector('h2').textContent=current.title;info.querySelector('p').textContent=current.description}
+    image.src=current.src;
+    await image.decode().catch(()=>{});
+    await lead.animate([{opacity:0},{opacity:1}],{duration:650,easing:'cubic-bezier(.16,1,.3,1)',fill:'forwards'}).finished;
+    isAdvancing=false;
+  };
+  Promise.all(introAnimations.map(animation=>animation.finished.catch(()=>{}))).then(()=>{
+    const hero=document.querySelector('.gallery-hero');
+    hero?.classList.add('is-carousel');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>hero?.classList.add('is-focused')));
+    window.setInterval(advanceFeatured,5000);
+  });
+}
+runHeroChoreography();
+const list=document.querySelector('#list');
+const rowMarkup=p=>`<article class="list-row" data-id="${p.id}" data-title="${p.title.toLowerCase()}" aria-expanded="false"><div class="list-info">${info(p)}</div>${art(p)}</article>`;
+const persistentLandscapeMarkup=p=>`<article class="list-row persistent-project" data-id="${p.id}" data-title="${p.title.toLowerCase()}" aria-expanded="false"><div class="project-surface"></div><div class="expanded-track"><div class="list-info expanded-context shared-info">${info(p)}<button class="view-btn" type="button">View</button></div><div class="shared-art">${art(p)}</div><dl class="meta expanded-meta expanded-only"><div><dt>Work category</dt><dd>Project</dd></div><div><dt>Project type</dt><dd>POC</dd></div><div><dt>Business area</dt><dd>DS&amp;I</dd></div><div><dt>DS&amp;I scorecard</dt><dd>Yes</dd></div></dl><div class="expanded-only overview-wrap">${overview()}</div><div class="expanded-only continuation-wrap">${landscapeContinuation()}</div></div></article>`;
+list.innerHTML=projects.map(p=>p.id==='landscape'?persistentLandscapeMarkup(p):rowMarkup(p)).join('');
+const landscape=list.querySelector('[data-id="landscape"]');
+const motionEase='cubic-bezier(.22,1,.36,1)';
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const motionDuration=600;
+let projectState='collapsed',projectAnimations=[],projectMaster=null,targetExpanded=false;
+const sharedInfo=landscape.querySelector('.shared-info'),sharedArt=landscape.querySelector('.shared-art .project-art');
+const surface=landscape.querySelector('.project-surface'),expandedOnly=[...landscape.querySelectorAll('.expanded-meta,.overview,.strip-section,.process-cards')];
+landscape.querySelector('.view-btn')?.addEventListener('click',event=>{event.stopPropagation();location.href='landscape.html'});
+function cancelProjectMotion(){projectAnimations.forEach(animation=>animation.cancel());projectAnimations=[];projectMaster=null}
+function makeMotion(element,keyframes){const animation=element.animate(keyframes,{duration:motionDuration,easing:motionEase,fill:'both'});animation.pause();projectAnimations.push(animation);return animation}
+function settleProjectMotion(){
+  const atStart=(projectMaster?.currentTime||0)<=1;
+  if(atStart){landscape.classList.remove('is-expanded','is-selected');landscape.setAttribute('aria-expanded','false');landscape.style.height='';landscape.style.overflow='';landscape.scrollLeft=0;userMoved=false;projectState='collapsed';targetExpanded=false;cancelProjectMotion();void landscape.offsetWidth;landscape.classList.remove('is-project-motion')}
+  else{projectState='expanded';targetExpanded=true;landscape.classList.remove('is-project-motion');landscape.setAttribute('aria-expanded','true');landscape.style.overflow='';scheduleScrollHint();sessionStorage.setItem('af-main-scroll',String(window.scrollY))}
+}
+function buildProjectMotion(){
+  cancelProjectMotion();
+  const collapsed={row:landscape.getBoundingClientRect(),info:sharedInfo.getBoundingClientRect(),art:sharedArt.getBoundingClientRect()};
+  landscape.classList.add('is-expanded','is-selected','is-project-motion');landscape.setAttribute('aria-expanded','true');
+  landscape.style.height='auto';landscape.style.overflow='hidden';
+  const expanded={row:landscape.getBoundingClientRect(),info:sharedInfo.getBoundingClientRect(),art:sharedArt.getBoundingClientRect()};
+  const infoDelta={x:collapsed.info.left-expanded.info.left,y:collapsed.info.top-expanded.info.top};
+  const artDelta={x:collapsed.art.left-expanded.art.left,y:collapsed.art.top-expanded.art.top};
+  projectMaster=makeMotion(landscape,[{height:collapsed.row.height+'px'},{height:expanded.row.height+'px'}]);
+  makeMotion(sharedInfo,[{transform:`translate(${infoDelta.x}px,${infoDelta.y}px)`},{transform:'translate(0,0)'}]);
+  makeMotion(sharedArt,[{width:collapsed.art.width+'px',height:collapsed.art.height+'px',flexBasis:collapsed.art.width+'px',transform:`translate(${artDelta.x}px,${artDelta.y}px)`},{width:expanded.art.width+'px',height:expanded.art.height+'px',flexBasis:expanded.art.width+'px',transform:'translate(0,0)'}]);
+  makeMotion(surface,[{opacity:1},{opacity:0}]);
+  makeMotion(sharedInfo,[{opacity:1},{opacity:1,offset:.48},{opacity:1}]);
+  expandedOnly.forEach(element=>makeMotion(element,[{opacity:0,clipPath:'inset(0 0 100% 0)'},{opacity:0,clipPath:'inset(0 0 100% 0)',offset:.58},{opacity:1,clipPath:'inset(0 0 0 0)'}]));
+  projectMaster.addEventListener('finish',settleProjectMotion);
+  landscape.style.height=collapsed.row.height+'px';
+}
+function setProjectExpanded(expand){
+  if(reducedMotion.matches){cancelProjectMotion();landscape.classList.toggle('is-expanded',expand);landscape.classList.toggle('is-selected',expand);landscape.setAttribute('aria-expanded',String(expand));landscape.style.height='';landscape.style.overflow='';projectState=expand?'expanded':'collapsed';targetExpanded=expand;return}
+  if(!projectMaster){if(!expand)return;buildProjectMotion()}
+  if(targetExpanded===expand&&((expand&&projectState!=='collapsing')||(!expand&&projectState!=='expanding')))return;
+  targetExpanded=expand;projectState=expand?'expanding':'collapsing';landscape.classList.add('is-project-motion');clearTimeout(hintTimer);
+  projectAnimations.forEach(animation=>{animation.playbackRate=expand?1:-1;animation.play()});
+}
+function expandLandscape(){setProjectExpanded(true)}
+function collapseLandscape(){setProjectExpanded(false)}
+list.addEventListener('click',e=>{const row=e.target.closest('[data-id]');if(row?.dataset.id==='landscape')expandLandscape()});
+landscape.addEventListener('pointermove',e=>{const card=e.target.closest('.expanded-context');if(!card)return;const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.setProperty('--context-tilt-x',`${(-y*3).toFixed(2)}deg`);card.style.setProperty('--context-tilt-y',`${(x*6-2).toFixed(2)}deg`)});
+landscape.addEventListener('pointerleave',()=>{const card=landscape.querySelector('.expanded-context');if(!card)return;card.style.setProperty('--context-tilt-x','0deg');card.style.setProperty('--context-tilt-y','-2deg')});
+let dragging=false,startX=0,startLeft=0,userMoved=false,jiggling=false,hintTimer;
+function scheduleScrollHint(){
+  clearTimeout(hintTimer);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  hintTimer=setTimeout(()=>{if(!userMoved&&landscape.scrollLeft<4)jiggleScroll()},1500)
+}
+function jiggleScroll(){
+  jiggling=true;
+  const start=performance.now(),duration=1200,amplitude=42;
+  function frame(now){
+    const progress=Math.min((now-start)/duration,1);
+    landscape.scrollLeft=Math.abs(Math.sin(progress*Math.PI*2))*amplitude*(1-progress*.25);
+    if(progress<1)requestAnimationFrame(frame);else{landscape.scrollLeft=0;jiggling=false}
+  }
+  requestAnimationFrame(frame)
+}
+landscape.addEventListener('pointerdown',e=>{if(!landscape.classList.contains('is-expanded'))return;userMoved=true;dragging=true;startX=e.clientX;startLeft=landscape.scrollLeft;landscape.setPointerCapture(e.pointerId)});
+landscape.addEventListener('pointermove',e=>{if(dragging)landscape.scrollLeft=startLeft-(e.clientX-startX)});
+landscape.addEventListener('pointerup',()=>dragging=false);
+landscape.addEventListener('pointercancel',()=>dragging=false);
+landscape.addEventListener('wheel',()=>userMoved=true,{passive:true});
+landscape.addEventListener('touchstart',()=>userMoved=true,{passive:true});
+landscape.addEventListener('scroll',()=>{if(!jiggling&&landscape.scrollLeft>4)userMoved=true},{passive:true});
+document.addEventListener('click',e=>{const clickedLandscape=e.composedPath().includes(landscape);if(landscape.classList.contains('is-expanded')&&!clickedLandscape)collapseLandscape()});
+bindFilters();
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+sessionStorage.removeItem('af-main-scroll');
+requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'instant'}));
+if(new URLSearchParams(location.search).get('expanded')==='1')expandLandscape();
+</script></body></html>

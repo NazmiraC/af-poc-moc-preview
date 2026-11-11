@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Alexforbes project archive — interactive card gallery concept.">
+  <title>AF Gallery — Option 6: Card archive</title>
+  <link rel="stylesheet" href="option-6.css?v=20261028-image-only-cards">
+</head>
+<body>
+  <main class="archive" id="archive">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="project-meta" aria-live="polite">
+      <a class="top-brand" href="index.html" aria-label="Alexforbes home"><img src="assets/exforbes-logo.png" alt="Alexforbes"></a>
+      <h1 id="projectTitle">AF Landscape</h1>
+      <dl>
+        <div><dt>Status</dt><dd id="projectStatus">Current</dd></div>
+        <div><dt>Category</dt><dd id="projectCategory">POC</dd></div>
+        <div><dt>Delivery</dt><dd id="projectDate">2026</dd></div>
+      </dl>
+    </header>
+
+    <aside class="project-note" aria-live="polite">
+      <span>Project note</span>
+      <p id="projectDescription">An interactive 3D environment for exploring projects spatially.</p>
+    </aside>
+
+    <section class="card-stage" aria-label="Project card gallery" aria-roledescription="carousel">
+      <div class="card-deck" id="cardDeck"></div>
+      <div class="interaction-hint" aria-label="Carousel navigation">
+        <button type="button" id="previousProject" aria-label="Previous project">←</button>
+        <span>drag or browse</span>
+        <button type="button" id="nextProject" aria-label="Next project">→</button>
+      </div>
+    </section>
+
+    <section class="index-panel" id="indexPanel" aria-label="Project index" aria-hidden="true">
+      <div class="index-heading"><span>Project index</span><button type="button" id="closeIndex">Close</button></div>
+      <div class="index-grid" id="indexGrid"></div>
+    </section>
+
+    <nav class="dock" aria-label="Gallery controls">
+      <button class="dock-filter is-active" type="button" data-filter="all">Projects</button>
+      <button class="dock-filter" type="button" data-filter="poc">POC</button>
+      <button class="dock-filter" type="button" data-filter="design">Design</button>
+      <button class="dock-index" id="openIndex" type="button">Index <span>⌃</span></button>
+    </nav>
+  </main>
+  <script src="option-6.js?v=20261028-image-only-cards"></script>
+</body>
+</html>

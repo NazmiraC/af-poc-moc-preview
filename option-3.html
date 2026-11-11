@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AF Gallery — Option 3: Scroll takeover</title>
+  <link rel="stylesheet" href="styles.css?v=20261023-option3-border">
+</head>
+<body>
+  <div class="app option3-app" id="app"></div>
+  <script src="app.js"></script>
+  <script>
+    const app=document.querySelector('#app');
+    const projectMeta=p=>`<dl class="meta option3-meta"><div><dt>Work category</dt><dd>${p.id==='pre'?'Defined':'Project'}</dd></div><div><dt>Project type</dt><dd>${p.id==='landscape'?'POC':'Defined'}</dd></div><div><dt>Business area</dt><dd>${p.id==='landscape'?'DS&I':'Defined'}</dd></div><div><dt>DS&I scorecard</dt><dd>${p.id==='landscape'?'Yes':'Defined'}</dd></div></dl>`;
+    const projectOverview=p=>`<section class="overview"><span class="num">01</span><h2>Overview</h2><div class="tags"><span class="tag">${p.id==='landscape'?'Innovation':'Tag'}</span><span class="tag">${p.id==='landscape'?'Ideation':'Tag'}</span><span class="tag">${p.id==='landscape'?'Communication':'Tag'}</span></div><h3><small>1.1</small>Background</h3><p>${p.desc}</p></section>`;
+    const projectStrip=(p,index)=>`<section class="option3-section" data-project="${p.id}"><article class="option3-strip ${index===0?'is-active':''}" tabindex="0"><div class="option3-track"><div class="option3-intro">${info(p)}<button class="view-btn option3-view" type="button">View</button></div><div class="option3-art">${art(p)}</div>${projectMeta(p)}${projectOverview(p)}${p.id==='landscape'?landscapeContinuation():''}</div></article></section>`;
+    const pageHeader=header().replace('<button class="select"><span>Status: </span><b>Current</b></button>','').replace('</section><nav','<span class="count">03 Projects</span></section><nav');
+    app.innerHTML=pageHeader+`<main class="option3-projects">${projects.map(projectStrip).join('')}</main>`+footer();
+    bindFilters();
+
+    const sections=[...document.querySelectorAll('.option3-section')];
+    const strips=sections.map(section=>section.querySelector('.option3-strip'));
+    let activeIndex=-1,scrollTick=false;
+    function updateActiveStrip(){
+      scrollTick=false;
+      let nextIndex=0;
+      const activationLine=innerHeight*.55;
+      sections.forEach((section,index)=>{
+        if(section.getBoundingClientRect().top<=activationLine)nextIndex=index;
+      });
+      if(nextIndex===activeIndex)return;
+      activeIndex=nextIndex;
+      strips.forEach((strip,index)=>strip.classList.toggle('is-active',index===activeIndex));
+    }
+    addEventListener('scroll',()=>{if(!scrollTick){scrollTick=true;requestAnimationFrame(updateActiveStrip)}},{passive:true});
+    addEventListener('resize',updateActiveStrip,{passive:true});
+    strips.forEach(strip=>{
+      let dragging=false,startX=0,startLeft=0;
+      strip.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();dragging=true;startX=e.clientX;startLeft=strip.scrollLeft;strip.setPointerCapture(e.pointerId)});
+      strip.addEventListener('pointermove',e=>{if(dragging)strip.scrollLeft=startLeft-(e.clientX-startX)});
+      strip.addEventListener('pointerup',()=>dragging=false);
+      strip.addEventListener('pointercancel',()=>dragging=false);
+    });
+    updateActiveStrip();
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    window.scrollTo({top:0,left:0,behavior:'instant'});
+  </script>
+</body>
+</html>

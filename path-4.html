@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AF Gallery — Option 2: Project rail</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app path4-app" id="app"></div>
+  <script src="app.js"></script>
+  <script>
+    const app=document.querySelector('#app');
+    const railProjects=[projects[0],projects[1],projects[2],projects[1],projects[1],projects[1],projects[2],projects[1],projects[0]];
+
+    const rowMarkup=p=>`<article class="list-row" data-id="${p.id}" data-title="${p.title.toLowerCase()}" tabindex="0" role="button"><div class="list-info">${info(p)}</div>${art(p)}</article>`;
+
+    function renderMain(){
+      app.className='app path4-app';
+      app.innerHTML=header()+`<main class="path4-list">${projects.map(rowMarkup).join('')}</main>`+footer();
+      bindFilters();
+      const statusFilter=document.querySelector('.select');
+      let currentOnly=true;
+      const applyLandingFilters=()=>{
+        const query=document.querySelector('.search input')?.value.toLowerCase()||'';
+        document.querySelectorAll('.path4-list [data-title]').forEach(row=>{
+          const project=byId(row.dataset.id);
+          row.hidden=!row.dataset.title.includes(query)||(currentOnly&&project.status!=='Current');
+        });
+      };
+      statusFilter?.addEventListener('click',()=>{
+        currentOnly=!currentOnly;
+        statusFilter.querySelector('b').textContent=currentOnly?'Current':'All';
+        statusFilter.setAttribute('aria-pressed',String(currentOnly));
+        applyLandingFilters();
+      });
+      document.querySelector('.search input')?.addEventListener('input',applyLandingFilters);
+      const open=e=>{const row=e.target.closest('[data-id]');if(row)openProject(row.dataset.id)};
+      document.querySelector('.path4-list').addEventListener('click',open);
+      document.querySelector('.path4-list').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-id]')){e.preventDefault();openProject(e.target.dataset.id)}});
+      window.scrollTo({top:0,left:0,behavior:'instant'});
+    }
+
+    function railCard(p,index){return `<button class="path4-rail-card ${p.type==='land'?'land':''}" data-id="${p.id}" data-index="${index}" aria-label="Open ${p.title}"><img src="${p.img}" alt=""><span class="rail-shade"></span>${status(p)}<b>${p.title}</b></button>`}
+
+    function detailSections(p){
+      const landscape=p.id==='landscape';
+      return `<div class="path4-detail-track">
+        <dl class="meta path4-meta"><div><dt>Start and end date</dt><dd>${p.date}</dd></div><div><dt>Work category</dt><dd>Project</dd></div><div><dt>Project type</dt><dd>${landscape?'POC':'Defined'}</dd></div><div><dt>Business area</dt><dd>DS&amp;I</dd></div><div><dt>DS&amp;I scorecard</dt><dd>Yes</dd></div></dl>
+        <div class="path4-focus-art">${art(p)}</div>
+        ${overview()}
+        ${landscape?landscapeContinuation():`<section class="strip-section goals"><span class="strip-number">02</span><h2>Project details</h2><h3><small>2.1</small>Summary</h3><p>${p.desc}</p></section>`}
+      </div>`;
+    }
+
+    function renderFocused(p,index=railProjects.findIndex(x=>x.id===p.id)){
+      const rail=document.querySelector('#path4Rail');
+      const summary=document.querySelector('#path4Summary');
+      const details=document.querySelector('#path4Details');
+      summary.innerHTML=`<div class="path4-heading">${status(p)}<h1>${p.title}</h1></div><p>${p.desc}</p><div class="path4-actions"><button class="path4-close" type="button">Close <span aria-hidden="true">×</span></button><button class="view-btn" type="button">View</button></div>`;
+      details.innerHTML=detailSections(p);
+      details.scrollLeft=0;
+      rail.querySelectorAll('.path4-rail-card').forEach((card,i)=>card.classList.toggle('active',i===index));
+      const activeCard=rail.querySelector(`[data-index="${index}"]`);
+      if(activeCard){
+        const centered=Math.max(0,activeCard.offsetLeft-(rail.clientWidth-activeCard.offsetWidth)/2);
+        const target=index===1?150:centered;
+        rail.scrollTo({left:target,behavior:'smooth'});
+      }
+      requestAnimationFrame(syncRailGradient);
+      summary.querySelector('.path4-close').addEventListener('click',closeFocused);
+    }
+
+    function syncRailGradient(){
+      const rail=document.querySelector('#path4Rail');
+      const active=rail?.querySelector('.path4-rail-card.active');
+      if(active)rail.style.setProperty('--selection-x',`${active.getBoundingClientRect().left-10}px`);
+    }
+
+    function openProject(id){
+      const p=byId(id);
+      const update=()=>{
+        app.className='app path4-app is-focused';
+        app.innerHTML=`${header(false)}<nav class="path4-rail" id="path4Rail" aria-label="Projects">${railProjects.map(railCard).join('')}</nav><section class="path4-summary" id="path4Summary"></section><main class="path4-details" id="path4Details"></main>${footer()}`;
+        const projectRail=document.querySelector('#path4Rail');
+        projectRail.addEventListener('click',e=>{const card=e.target.closest('[data-index]');if(card)renderFocused(byId(card.dataset.id),Number(card.dataset.index))});
+        projectRail.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();projectRail.scrollLeft+=e.deltaY}},{passive:false});
+        projectRail.addEventListener('scroll',syncRailGradient,{passive:true});
+        renderFocused(p);
+        window.scrollTo({top:0,left:0,behavior:'instant'});
+      };
+      if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.startViewTransition(update);else update();
+    }
+
+    function closeFocused(){
+      const update=()=>renderMain();
+      if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.startViewTransition(update);else update();
+    }
+
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    const initialProject=new URLSearchParams(location.search).get('project');
+    if(initialProject&&projects.some(p=>p.id===initialProject))openProject(initialProject);else renderMain();
+  </script>
+</body>
+</html>
