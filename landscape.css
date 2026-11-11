@@ -210,5 +210,3 @@
   .resource-strip{padding-block:14px}
 }
 
-/* Let the hero gradient continue behind the logo while preserving its position. */
-.topbar{position:absolute;z-index:10;top:0;left:0;right:0;background:transparent}
