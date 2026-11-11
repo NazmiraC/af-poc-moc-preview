@@ -89,4 +89,14 @@ body:after{inset:-38%;z-index:0;background:radial-gradient(ellipse at 22% 8%,rgb
 .advanced-fields{grid-template-columns:1fr;align-content:start;gap:22px;padding:20px 30px 30px}
 .advanced-footer{gap:14px;padding:17px 26px;background:rgba(255,255,255,.55)}.advanced-footer>span{font-size:12px}.advanced-footer>div{gap:9px}.advanced-footer button{height:40px;padding:0 17px;font-size:12px}
 @media(max-width:600px){.advanced-search{width:100vw;height:100dvh}.advanced-shell{border-radius:0}.advanced-fields{padding:18px}}
+
+/* Use the same centered content rail as project details and gallery. */
+:root{--page-gutter:max(24px,calc((100vw - 1280px)/2))}
+.project-index{padding:30px var(--page-gutter) 60px}
+.index-search-action{right:var(--page-gutter)}
+@media(max-width:720px){
+  :root{--page-gutter:20px}
+  .project-index{padding:20px 20px 40px}
+  .index-search-action{right:20px;width:calc(100% - 40px)}
+}
 @media(prefers-reduced-motion:reduce){body:before,body:after{animation:none}}

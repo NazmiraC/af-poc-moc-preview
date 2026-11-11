@@ -387,3 +387,17 @@ button{cursor:pointer}
 .filter-drawer.is-open .filter-drawer-shell{transform:none!important}
 .filter-drawer-fields{grid-template-columns:1fr;gap:22px;padding:20px 30px 30px}
 @media(max-width:600px){.filter-drawer{width:100vw!important;height:100dvh!important}.filter-drawer-shell{border-radius:0!important}.filter-drawer-fields{padding:18px}}
+
+/* Share the project-details content rail across gallery views. */
+:root{--page-gutter:max(24px,calc((100vw - 1280px)/2))}
+.showcase-header{padding-left:var(--page-gutter);padding-right:var(--page-gutter)}
+.project-intro{left:var(--page-gutter)}
+.project-meta{right:var(--page-gutter)}
+.search-action{right:var(--page-gutter)}
+@media(max-width:720px){
+  :root{--page-gutter:20px}
+  .showcase-header{padding:20px}
+  .project-intro{left:var(--page-gutter);width:calc(100% - 40px)}
+  .search-action{right:var(--page-gutter);width:calc(100% - 40px)}
+  .tag-strip{width:calc(100% - 40px)}
+}
