@@ -169,13 +169,13 @@
 }
 
 /* Expanded content sizing from Figma 843:18028. */
-.team-groups{grid-template-columns:repeat(2,minmax(0,270px));gap:20px;max-width:560px}
-.team-card{padding:20px 24px 22px;border-radius:8px}
-.team-card h4{margin:0 0 16px;padding-bottom:14px;font-size:16px}
-.team-members{gap:11px}
-.team-members>div{gap:12px}
-.team-members span{width:30px;height:30px;flex-basis:30px;font-size:12px}
-.team-members b{font-size:14px}
+.team-groups{grid-template-columns:repeat(2,minmax(0,230px));gap:16px;max-width:476px}
+.team-card{padding:16px 18px 18px;border-radius:7px}
+.team-card h4{margin:0 0 13px;padding-bottom:11px;font-size:14px}
+.team-members{gap:9px}
+.team-members>div{gap:10px}
+.team-members span{width:26px;height:26px;flex-basis:26px;font-size:10px}
+.team-members b{font-size:12px}
 .timeline{width:100%;overflow:visible}
 .quarters{grid-template-columns:minmax(190px,1.4fr) 95px repeat(4,minmax(0,1fr))}
 .timeline-row{grid-template-columns:minmax(190px,1.4fr) 95px minmax(0,4fr);align-items:center;min-height:42px}
@@ -198,4 +198,14 @@
 }
 @media(max-width:420px){
   .workflow>div{grid-template-columns:1fr}
+}
+
+/* Compact project-resource banner, aligned to the reference card scale. */
+.resource-strip{padding-block:16px}
+.resource-strip a{min-height:66px;padding:10px 45px 10px 20px}
+.resource-strip a b{font-size:14px;line-height:1.25}
+.resource-strip a span{margin-top:3px;font-size:12px;line-height:1.3}
+.resource-strip i{top:25px;width:16px;height:16px}
+@media(max-width:700px){
+  .resource-strip{padding-block:14px}
 }
