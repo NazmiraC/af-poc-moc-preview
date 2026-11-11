@@ -1,5 +1,5 @@
 const projects = [
-  {name:'AF Landscape',status:'Current',category:'Project',type:'POC',year:'2026',image:'assets/af-engage.png',area:'DS&I',purpose:['Innovation','Ideation','Communication'],audience:'Internal',contributor:'DS&I Team',discipline:['Concept development','Design','Technical architecture','Development'],deliverable:'3D model'},
+  {name:'AF Landscape',status:'Current',category:'Project',type:'POC',year:'2026',image:'assets/af-engage.png',area:'DS&I',purpose:['Innovation','Ideation','Communication'],audience:'Internal',contributor:'DS&I Team',discipline:['Concept development','Design','Technical architecture','Development'],deliverable:'3D model',href:'landscape.html'},
   {name:'Pre to Post',status:'Current',category:'Design',type:'Design',year:'2026',image:'assets/pre-post.png',area:'Retirement',purpose:['Enhancement','Communication'],audience:'Clients',contributor:'Product Team',discipline:['UX','Design thinking','Research'],deliverable:'Calculator'},
   {name:'Launch Lab',status:'Current',category:'Project',type:'POC',year:'2026',image:'assets/hero-project-04.png',area:'DS&I',purpose:['Innovation','New features'],audience:'Internal',contributor:'Innovation Team',discipline:['Concept development','Testing','Development'],deliverable:'App'},
   {name:'Global Operations',status:'Proposed',category:'Design',type:'Design',year:'2026',image:'assets/hero-project-02.png',area:'Operations',purpose:['Strategy','Communication'],audience:'Internal',contributor:'Operations Team',discipline:['Research','Analysis'],deliverable:'Dashboard'},
@@ -84,7 +84,8 @@ function restoreIndexState() {
 function renderProjects(items = projects) {
   projectGrid.innerHTML = items.map(project => {
     const index = projects.indexOf(project);
-    return `<a class="project-item" href="option-7.html?v=20261110-static-pill-panels&project=${index}"><img src="${project.image}" alt="${project.name}"><div class="project-copy"><h2>${project.name}</h2><p>${project.type} · ${project.year}</p><span class="status status-${project.status.toLowerCase()}">${project.status}</span></div></a>`;
+    const href = project.href || `option-7.html?v=20261110-static-pill-panels&project=${index}`;
+    return `<a class="project-item" href="${href}"><img src="${project.image}" alt="${project.name}"><div class="project-copy"><h2>${project.name}</h2><p>${project.type} · ${project.year}</p><span class="status status-${project.status.toLowerCase()}">${project.status}</span></div></a>`;
   }).join('');
   projectGrid.classList.toggle('is-empty', items.length === 0);
   if (!items.length) projectGrid.innerHTML = '<p class="empty-results">No projects match these filters.</p>';
