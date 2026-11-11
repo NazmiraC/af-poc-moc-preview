@@ -169,13 +169,13 @@
 }
 
 /* Expanded content sizing from Figma 843:18028. */
-.team-groups{grid-template-columns:repeat(2,minmax(0,315px));gap:28px;max-width:658px}
-.team-card{padding:26px 32px 30px;border-radius:10px}
-.team-card h4{margin:0 0 22px;padding-bottom:18px;font-size:18px}
-.team-members{gap:14px}
-.team-members>div{gap:14px}
-.team-members span{width:34px;height:34px;flex-basis:34px;font-size:14px}
-.team-members b{font-size:16px}
+.team-groups{grid-template-columns:repeat(2,minmax(0,270px));gap:20px;max-width:560px}
+.team-card{padding:20px 24px 22px;border-radius:8px}
+.team-card h4{margin:0 0 16px;padding-bottom:14px;font-size:16px}
+.team-members{gap:11px}
+.team-members>div{gap:12px}
+.team-members span{width:30px;height:30px;flex-basis:30px;font-size:12px}
+.team-members b{font-size:14px}
 .timeline{width:100%;overflow:visible}
 .quarters{grid-template-columns:minmax(190px,1.4fr) 95px repeat(4,minmax(0,1fr))}
 .timeline-row{grid-template-columns:minmax(190px,1.4fr) 95px minmax(0,4fr);align-items:center;min-height:42px}
