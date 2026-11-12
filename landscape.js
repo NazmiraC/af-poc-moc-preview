@@ -1,18 +1,41 @@
+function restoreViewportAnchor(anchor, topBefore) {
+  requestAnimationFrame(() => {
+    const topAfter = anchor.getBoundingClientRect().top;
+    const offset = topAfter - topBefore;
+
+    if (Math.abs(offset) < 0.5) return;
+
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollBy(0, offset);
+    root.style.scrollBehavior = previousScrollBehavior;
+  });
+}
+
 document.querySelectorAll('.fold').forEach(button => {
   button.addEventListener('click', () => {
     const chapter = button.closest('.chapter');
+    const chapterHeader = chapter.querySelector('.chapter-head');
+    const headerTop = chapterHeader.getBoundingClientRect().top;
     const willOpen = chapter.classList.contains('collapsed');
 
     document.querySelectorAll('.chapter').forEach(section => {
       section.classList.add('collapsed');
       const sectionButton = section.querySelector('.fold');
-      if (sectionButton) sectionButton.textContent = '⌄';
+      if (sectionButton) {
+        sectionButton.textContent = '⌄';
+        sectionButton.setAttribute('aria-expanded', 'false');
+      }
     });
 
     if (willOpen) {
       chapter.classList.remove('collapsed');
       button.textContent = '⌃';
+      button.setAttribute('aria-expanded', 'true');
     }
+
+    restoreViewportAnchor(chapterHeader, headerTop);
   });
 });
 
@@ -23,10 +46,49 @@ document.querySelectorAll('.chapter-head').forEach(header => {
   });
 });
 
+document.querySelectorAll('.phase-list details > summary').forEach(summary => {
+  summary.addEventListener('click', () => {
+    const summaryTop = summary.getBoundingClientRect().top;
+    restoreViewportAnchor(summary, summaryTop);
+  });
+});
+
 const deck = document.querySelector('.hero-stack');
 const deckCards = [...document.querySelectorAll('.deck-card')];
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let deckAnimating = false;
+const deckMotion = {
+  duration: 560,
+  easing: 'cubic-bezier(.22,1,.36,1)'
+};
+
+function deckTransform(dx, dy, sx, sy, remainder = 1) {
+  return `translate(${dx * remainder}px, ${dy * remainder}px) scale(${1 + (sx - 1) * remainder}, ${1 + (sy - 1) * remainder})`;
+}
+
+function deckRole(card) {
+  if (card.classList.contains('hero-card')) return 'hero';
+  if (card.classList.contains('peek-behind')) return 'behind';
+  for (const role of ['a', 'b', 'c']) {
+    if (card.classList.contains(`peek-${role}`)) return role;
+  }
+  return '';
+}
+
+function assignMovingRightSlots(cards, previousRoles) {
+  const slotOrders = [['a', 'b'], ['b', 'a']];
+  const positions = {behind:-1, hero:0, a:1, b:2, c:3};
+  const score = slots => cards.reduce((total, card, index) => {
+    const previous = previousRoles.get(card);
+    const next = slots[index];
+    const stayedStill = previous === next ? 100 : 0;
+    return total + stayedStill + Math.abs((positions[next] ?? 0) - (positions[previous] ?? 0));
+  }, 0);
+  const slots = slotOrders.sort((first, second) => score(first) - score(second))[0];
+  cards.forEach((card, index) => {
+    card.className = `deck-card peek peek-${slots[index]}`;
+  });
+}
 
 function focusDeckCard(target) {
   const current = deck?.querySelector('.hero-card');
@@ -34,44 +96,68 @@ function focusDeckCard(target) {
   deckAnimating = true;
 
   const remaining = deckCards.filter(card => card !== current && card !== target);
-  const before = new Map(deckCards.map(card => [card, card.getBoundingClientRect()]));
+  const previousRoles = new Map(deckCards.map(card => [card, deckRole(card)]));
+  const before = new Map(deckCards.map(card => {
+    const rect = card.getBoundingClientRect();
+    return [card, {rect, opacity:Number.parseFloat(getComputedStyle(card).opacity) || 1}];
+  }));
 
   target.className = 'deck-card hero-card';
-  [...remaining, current].forEach((card, index) => {
-    card.className = `deck-card peek peek-${String.fromCharCode(97 + index)}`;
-  });
+  assignMovingRightSlots(remaining, previousRoles);
+  current.className = 'deck-card peek peek-behind';
 
   if (reducedMotion || !target.animate) {
     deckAnimating = false;
     return;
   }
 
-  const panelRect = document.querySelector('.project-intro').getBoundingClientRect();
   const animations = deckCards.map(card => {
     const after = card.getBoundingClientRect();
     const first = before.get(card);
-    const dx = first.left - after.left;
-    const dy = first.top - after.top;
-    const sx = first.width / after.width;
-    const sy = first.height / after.height;
+    const dx = first.rect.left - after.left;
+    const dy = first.rect.top - after.top;
+    const sx = first.rect.width / after.width;
+    const sy = first.rect.height / after.height;
+    const finalOpacity = Number.parseFloat(getComputedStyle(card).opacity) || 1;
+    const isIncoming = card === target;
+    const isOutgoing = card === current;
+    const settleOffset = isIncoming ? .66 : isOutgoing ? .72 : .76;
+    const remainder = isIncoming ? .045 : isOutgoing ? .08 : .065;
+    const settleOpacity = isOutgoing
+      ? Math.max(finalOpacity, .42)
+      : finalOpacity;
 
-    if (card === current) {
-      const behindPanel = panelRect.left + panelRect.width * .55 - after.left - after.width * .5;
-      return card.animate([
-        {transform:`translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,opacity:1},
-        {transform:`translate(${behindPanel}px, ${dy * .35}px) scale(.88)`,opacity:.18,offset:.72},
-        {transform:'translate(0, 0) scale(1)',opacity:0}
-      ],{duration:620,easing:'cubic-bezier(.22,1,.36,1)'});
-    }
+    card.style.willChange = 'transform, opacity';
 
     return card.animate([
-      {transform:`translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`},
-      {transform:'translate(0, 0) scale(1)'}
-    ],{duration:620,easing:'cubic-bezier(.22,1,.36,1)'});
+      {
+        transform:deckTransform(dx, dy, sx, sy),
+        transformOrigin:'0 0',
+        opacity:first.opacity,
+        offset:0,
+        easing:deckMotion.easing
+      },
+      {
+        transform:deckTransform(dx, dy, sx, sy, remainder),
+        transformOrigin:'0 0',
+        opacity:settleOpacity,
+        offset:settleOffset,
+        easing:'cubic-bezier(.2,.8,.2,1)'
+      },
+      {
+        transform:'translate(0, 0) scale(1)',
+        transformOrigin:'0 0',
+        opacity:finalOpacity,
+        offset:1
+      }
+    ],{duration:deckMotion.duration,fill:'both'});
   });
 
   Promise.allSettled(animations.map(animation => animation.finished)).then(() => {
-    current.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out'});
+    animations.forEach((animation, index) => {
+      animation.cancel();
+      deckCards[index].style.willChange = '';
+    });
     deckAnimating = false;
   });
 }

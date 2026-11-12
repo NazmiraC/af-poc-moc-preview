@@ -4,10 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>AF Landscape — Project details</title>
-  <link rel="stylesheet" href="landscape.css?v=20261111-shared-page-rail">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+  <link rel="stylesheet" href="landscape.css?v=20261112-hidden-resource-scrollbar">
 </head>
 <body>
-  <header class="topbar"><a href="option-7.html" aria-label="Back to project gallery"><img src="assets/exforbes-logo.png" alt="Alexforbes"></a></header>
+  <header class="topbar">
+    <a class="topbar-logo" href="option-7.html" aria-label="Back to project gallery"><img src="assets/exforbes-logo.png" alt="Alexforbes"></a>
+    <nav class="view-switch" aria-label="Project display view">
+      <a class="view-switch-option" href="option-7.html" aria-label="Open gallery view" title="Gallery view"><span class="material-symbols-rounded" aria-hidden="true">view_carousel</span><span class="sr-only">Gallery view</span></a>
+      <a class="view-switch-option" href="option-7-index.html" aria-label="Open project index" title="Project index"><span class="material-symbols-rounded" aria-hidden="true">view_list</span><span class="sr-only">Project index</span></a>
+    </nav>
+  </header>
 
   <main>
     <section class="hero">
@@ -34,13 +43,15 @@
           <button class="hero-arrow hero-arrow-next" type="button" aria-label="Next project image">›</button>
         </div>
       </div>
-      <div class="resource-strip" aria-label="Project resources">
-        <a href="#files"><b>3D Experience</b><span>Interactive 3D environment.</span><i>↗</i></a>
-        <a href="#files"><b>Miro board</b><span>Project planning &amp; collaboration.</span><i>↗</i></a>
-        <a href="#workflow"><b>Technical workflow</b><span>Four-stage pipeline.</span><i>↗</i></a>
-        <a href="#files"><b>Concept illustration</b><span>Narrative project artwork.</span><i>↗</i></a>
-        <a href="#files"><b>Environment assets</b><span>3D models and assets.</span><i>↗</i></a>
-        <a href="#files"><b>Environment screenshots</b><span>Views and content-editor.</span><i>↗</i></a>
+      <div class="resource-strip-shell">
+        <div class="resource-strip" aria-label="Project resources">
+          <a href="#files"><b>3D Experience</b><span>Interactive 3D environment.</span><i>↗</i></a>
+          <a href="#files"><b>Miro board</b><span>Project planning &amp; collaboration.</span><i>↗</i></a>
+          <a href="#workflow"><b>Technical workflow</b><span>Four-stage pipeline.</span><i>↗</i></a>
+          <a href="#files"><b>Concept illustration</b><span>Narrative project artwork.</span><i>↗</i></a>
+          <a href="#files"><b>Environment assets</b><span>3D models and assets.</span><i>↗</i></a>
+          <a href="#files"><b>Environment screenshots</b><span>Views and content-editor.</span><i>↗</i></a>
+        </div>
       </div>
       <div class="summary">
         <div><small>Project status</small><strong>Current</strong></div>
@@ -72,8 +83,8 @@
       <header class="chapter-head"><div><small>03</small><h2>Project <br>delivery</h2></div><div class="tags"><span>Concept development</span><span>Design</span><span>Technical architecture</span><span>Development</span></div><button class="fold" aria-label="Toggle section">⌃</button></header>
       <div class="chapter-body">
         <article class="row delivery-row"><div class="row-title"><small>3.1</small><h3>Phases &amp;<br>deliverables</h3></div><div class="phase-list">
-          <details class="complete"><summary><i>✓</i><span>Concept development <b class="pill done">Completed</b></span></summary></details>
-          <details class="complete" open><summary><i>✓</i><span>3D design &amp; asset creation <b class="pill done">Completed</b></span></summary><div class="deliverables"><article><div><span class="eyebrow">3D model</span><h4>Asset creation</h4><span class="pill done">Completed</span><small>12 Jan 2025 – 23 Jan 2025</small></div><p>A low-poly visual language gave the environment a distinctive character while keeping assets lightweight for the web. Environments, characters, lighting, textures and animations were authored in Blender.</p><img src="assets/hero-project-05.png" alt="Reusable 3D characters"></article><article><div><span class="eyebrow">3D model</span><h4>Software delivery team environment</h4><span class="pill done">Completed</span><small>26 Jan 2025 – 30 Jan 2025</small></div><p>A low-poly environment representing a software delivery team, including characters, desks, a central rocket and supporting assets.</p><img src="assets/af-engage.png" alt="Software delivery team environment"></article></div></details>
+          <details class="complete"><summary><i aria-hidden="true"><span class="material-symbols-rounded">check</span></i><span>Concept development <b class="pill done">Completed</b></span></summary></details>
+          <details class="complete" open><summary><i aria-hidden="true"><span class="material-symbols-rounded">check</span></i><span>3D design &amp; asset creation <b class="pill done">Completed</b></span></summary><div class="deliverables"><article><div><span class="eyebrow">3D model</span><h4>Asset creation</h4><span class="pill done">Completed</span><small>12 Jan 2025 – 23 Jan 2025</small></div><p>A low-poly visual language gave the environment a distinctive character while keeping assets lightweight for the web. Environments, characters, lighting, textures and animations were authored in Blender.</p><img src="assets/hero-project-05.png" alt="Reusable 3D characters"></article><article><div><span class="eyebrow">3D model</span><h4>Software delivery team environment</h4><span class="pill done">Completed</span><small>26 Jan 2025 – 30 Jan 2025</small></div><p>A low-poly environment representing a software delivery team, including characters, desks, a central rocket and supporting assets.</p><img src="assets/af-engage.png" alt="Software delivery team environment"></article></div></details>
           <details class="active"><summary><i>3</i><span>Technical architecture <b class="pill current">Current</b></span></summary></details>
           <details class="active"><summary><i>4</i><span>Web development &amp; interaction <b class="pill current">Current</b></span></summary></details>
           <details><summary><i>5</i><span>Content editor development <b class="pill proposed">Proposed</b></span></summary></details>
@@ -93,10 +104,10 @@
     </section>
   </main>
   <nav class="project-pagination" aria-label="Project navigation">
-    <a href="option-5.html" aria-label="Previous project">&lt; Previous project</a>
-    <a href="option-5.html" aria-label="Next project">Next project &gt;</a>
+    <a class="is-disabled" aria-label="Previous project unavailable" aria-disabled="true" tabindex="-1">&lt; Previous project</a>
+    <a class="is-disabled" aria-label="Next project unavailable" aria-disabled="true" tabindex="-1">Next project &gt;</a>
   </nav>
   <footer><span>© Alex Forbes. Project Gallery. 2026</span><span>Data &amp; Privacy policy.</span></footer>
-  <script src="landscape.js?v=20261026-figma-card-refine"></script>
+  <script src="landscape.js?v=20261112-hidden-resource-scrollbar"></script>
 </body>
 </html>
