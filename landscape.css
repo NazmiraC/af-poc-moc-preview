@@ -210,3 +210,42 @@
   .resource-strip{padding-block:14px}
 }
 
+/* Shared 30px page rail used by the gallery and project index. */
+@media(min-width:701px){
+  :root{--page-gutter:30px}
+  .topbar{
+    height:84px;
+    padding:0 var(--page-gutter);
+  }
+  .topbar a{
+    display:block;
+    width:160px;
+    height:24px;
+    overflow:hidden;
+  }
+  .topbar img{
+    width:160px;
+    height:auto;
+    max-width:none;
+  }
+  .hero-inner{
+    width:100%;
+    max-width:none;
+    grid-template-columns:280px minmax(0,1fr);
+    gap:25px;
+    padding:40px var(--page-gutter);
+  }
+  .project-intro{
+    width:280px;
+    min-height:500px;
+  }
+  .resource-strip,
+  .summary,
+  .chapter,
+  .project-pagination,
+  footer{
+    padding-left:var(--page-gutter);
+    padding-right:var(--page-gutter);
+  }
+}
+
